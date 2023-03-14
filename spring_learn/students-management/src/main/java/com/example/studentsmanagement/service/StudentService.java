@@ -5,6 +5,7 @@ import com.example.studentsmanagement.dao.UniversityClassDao;
 import com.example.studentsmanagement.exceptions.InvalidUniversityClassException;
 import com.example.studentsmanagement.exceptions.StudentEmptyNameException;
 import com.example.studentsmanagement.exceptions.StudentNonExistException;
+import com.example.studentsmanagement.mapper.StudentMapper;
 import com.example.studentsmanagement.model.Student;
 import com.example.studentsmanagement.model.UniversityClass;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,10 +18,13 @@ import java.util.Optional;
 public class StudentService {
     private StudentDao studentDao;
     private UniversityClassDao universityClassDao;
+    private StudentMapper studentMapper;
     @Autowired
-    public StudentService(StudentDao studentDao, UniversityClassDao universityClassDao) {
+    public StudentService(StudentDao studentDao, UniversityClassDao universityClassDao,
+                          StudentMapper studentMapper) {
         this.studentDao = studentDao;
         this.universityClassDao = universityClassDao;
+        this.studentMapper = studentMapper;
     }
 
     public Student addStudent(Student student) {
@@ -57,5 +61,15 @@ public class StudentService {
 
     public Optional<Student> getStudentById(Long id) {
         return studentDao.findById(id);
+    }
+
+    public List<Student> getStudentsByName(String name) {return studentDao.findByName(name);}
+
+    public List<Student> getStudentsContainName(String name) {
+        return studentMapper.getStudentsContainStrInName("%" + name + "%");
+    }
+
+    public List<Student> getStudentsInClass(int year, int number) {
+        return studentMapper.getStudentsInClass(year, number);
     }
 }
